@@ -1,0 +1,2 @@
+try {Connect-VIServer -Server $ENV:ENV_VISERVER -User $ENV:ENV_VISERVER_USER -Password $ENV:ENV_VISERVER_PASSWORD | Out-Null} catch {}
+(get-vm).name  | foreach {$ComputerName = $_ ; Get-VM $ComputerName | where {$_.PowerState -eq "PoweredOn"} | select Name, @{n="IPAddress";e={(Get-VMGuest -VM $ComputerName | select -ExpandProperty IPAddress | select-String -NotMatch ::).Line}},Notes} | ConvertTo-Json
